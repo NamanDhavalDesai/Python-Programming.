@@ -4,7 +4,8 @@ import pdf2image
 import pytesseract
 import os 
 import PyPDF2
-from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfWriter
+from PyPDF2 import PdfReader
 def conversion(input,output):
     try:
         pytesseract.pytesseract.tesseract_cmd = 'C:/Program Files/Tesseract-OCR/tesseract.exe'
@@ -30,15 +31,15 @@ def pdftoimagetopdf(input,foutput):
         i=i+1
     for j in range(0,i):
         conversion(''+output+''+str(j)+'.jpg',''+output+'s'+str(j)+'.pdf')
-    pdf_writer = PdfFileWriter()
+    pdf_writer = PdfWriter()
     for k in range(0,i):
         pdfFileObj = open(''+output+'s'+str(k)+'.pdf','rb')
-        pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-        for pageNum in range(pdfReader.getNumPages()):
-            pageObj = pdfReader.getPage(pageNum)
-            pdf_writer.addPage(pageObj)
+        pdfReader = PyPDF2.PdfReader(pdfFileObj)
+        for pageNum in range(len(pdfReader.pages)):
+            pageObj = pdfReader.pages[pageNum]
+            pdf_writer.add_page(pageObj)
     pdfOutput = open(foutput,'wb')
     pdf_writer.write(pdfOutput)
     pdfOutput.close()
 #Place the paths along with the file names here.
-pdftoimagetopdf("<input file with entire path>","<output new file with entire path>")
+pdftoimagetopdf("test.pdf","op.pdf")
